@@ -7,8 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <Label HorizontalAlignment="Center" VerticalAlignment="Center">
-        Hello Automate
-        </Label>
+        <Label Content="{Binding MousMove}" HorizontalAlignment="Center" VerticalAlignment="Center" />
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Automate.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,10 @@ namespace Automate.Spike
         public MainWindow()
         {
             InitializeComponent();
+            this._MainViewModel = new MainViewModel();
+            this.DataContext = _MainViewModel;
         }
+
+        private MainViewModel _MainViewModel;
     }
 }
