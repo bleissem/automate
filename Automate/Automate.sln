@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automate.Spike", "Automate.Spike\Automate.Spike.csproj", "{C41E3AF3-D167-46A9-9B85-2C0401376B85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automate.ViewModels", "Automate.ViewModels\Automate.ViewModels.csproj", "{8EEC2AD3-F5A3-401D-8F22-C609B61B479F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Automate.Common", "Automate.Common\Automate.Common.csproj", "{0A63558E-43F3-4B88-82EE-9AB1B0703EF7}"
 EndProject
 Global
@@ -23,12 +21,6 @@ Global
 		{C41E3AF3-D167-46A9-9B85-2C0401376B85}.Release|x64.ActiveCfg = Release|x86
 		{C41E3AF3-D167-46A9-9B85-2C0401376B85}.Release|x86.ActiveCfg = Release|x86
 		{C41E3AF3-D167-46A9-9B85-2C0401376B85}.Release|x86.Build.0 = Release|x86
-		{8EEC2AD3-F5A3-401D-8F22-C609B61B479F}.Debug|x64.ActiveCfg = Debug|x86
-		{8EEC2AD3-F5A3-401D-8F22-C609B61B479F}.Debug|x86.ActiveCfg = Debug|x86
-		{8EEC2AD3-F5A3-401D-8F22-C609B61B479F}.Debug|x86.Build.0 = Debug|x86
-		{8EEC2AD3-F5A3-401D-8F22-C609B61B479F}.Release|x64.ActiveCfg = Release|x86
-		{8EEC2AD3-F5A3-401D-8F22-C609B61B479F}.Release|x86.ActiveCfg = Release|x86
-		{8EEC2AD3-F5A3-401D-8F22-C609B61B479F}.Release|x86.Build.0 = Release|x86
 		{0A63558E-43F3-4B88-82EE-9AB1B0703EF7}.Debug|x64.ActiveCfg = Debug|x86
 		{0A63558E-43F3-4B88-82EE-9AB1B0703EF7}.Debug|x86.ActiveCfg = Debug|x86
 		{0A63558E-43F3-4B88-82EE-9AB1B0703EF7}.Debug|x86.Build.0 = Debug|x86

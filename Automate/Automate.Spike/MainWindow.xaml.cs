@@ -1,4 +1,5 @@
-﻿using Automate.ViewModels;
+﻿using Automate.Common;
+using Automate.Common.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,5 +30,11 @@ namespace Automate.Spike
         }
 
         private MainViewModel _MainViewModel;
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+            MouseInput.Move(-100, 100);
+        }
     }
 }

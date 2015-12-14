@@ -97,10 +97,6 @@
       <Project>{0a63558e-43f3-4b88-82ee-9ab1b0703ef7}</Project>
       <Name>Automate.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Automate.ViewModels\Automate.ViewModels.csproj">
-      <Project>{8eec2ad3-f5a3-401d-8f22-c609b61b479f}</Project>
-      <Name>Automate.ViewModels</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
