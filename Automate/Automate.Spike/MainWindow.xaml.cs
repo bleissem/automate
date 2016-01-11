@@ -1,5 +1,6 @@
 ﻿using Automate.Common;
 using Automate.Common.ViewModels;
+using Automate.Player;
 using System;
 using System.Collections.Generic;
 using System.Linq;
