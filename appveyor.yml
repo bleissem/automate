@@ -1,6 +1,13 @@
 version: 1.0.{build}
 
+branches:
+
+  except:
+    - gh-pages
+    
+skip_tags: true
+
 build:
 
-  verbosity: minimal
+  verbosity: normal
 
