@@ -30,6 +30,7 @@ namespace Automate.Spike
             this.DataContext = _MainViewModel;
         }
 
+
         private MainViewModel _MainViewModel;
 
         private void Button_Click(object sender, RoutedEventArgs e)

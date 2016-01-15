@@ -19,6 +19,11 @@ namespace Automate.Recorder
             m_Hook.MouseDown += M_Hook_MouseDown;
         }
 
+        ~MouseRecorder()
+        {
+            this.Dispose(false);
+            GC.SuppressFinalize(this);
+        }
         #endregion
 
 
@@ -26,20 +31,31 @@ namespace Automate.Recorder
 
         private void Dispose(bool disposing)
         {
+            if (null != m_MoveAction)
+            {
+                m_MoveAction = null;
+            }
+
             if (null != m_Hook)
             {
                 m_Hook.MouseMoveExt -= M_Hook_MouseMoveExt;
                 m_Hook.MouseDownExt -= M_Hook_MouseDownExt;
                 m_Hook.MouseDown -= M_Hook_MouseDown;
                 m_Hook = null;
-            }
+            }            
         }
+
         public void Dispose()
         {
-
+            this.Dispose(true);
         }
 
+        public void RegisterMousMove(Action<MouseEventExtArgs> moveAction)
+        {
+            m_MoveAction = moveAction;
+        }
 
+        private Action<MouseEventExtArgs> m_MoveAction;
 
         private void M_Hook_MouseDownExt(object sender, MouseEventExtArgs e)
         {
@@ -48,7 +64,10 @@ namespace Automate.Recorder
 
         private void M_Hook_MouseMoveExt(object sender, MouseEventExtArgs e)
         {
-            
+            if (null != m_MoveAction)
+            {
+                m_MoveAction(e);
+            }
         }
 
 
