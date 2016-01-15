@@ -51,10 +51,31 @@ namespace Automate.Recorder
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         static extern int GetWindowTextLength(IntPtr hWnd);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, [Out] StringBuilder lParam);
+        [DllImport("user32.dll", EntryPoint = "SendMessage", CharSet = CharSet.Auto)]
+        static extern IntPtr GetWindowTextContent(IntPtr hWnd, UInt32 Msg, int wParam, [Out] StringBuilder lParam);      
 
+        [DllImport("user32.dll", EntryPoint = "SendMessage",
+          CharSet = CharSet.Auto)]
+        static extern int GetTextContentLength(IntPtr hwndControl, UInt32 Msg, int wParam, int lParam); 
 
+        static int GetTextBoxTextLength(IntPtr hTextBox)
+        {
+            uint WM_GETTEXTLENGTH = 0x000E;
+            int result = GetTextContentLength(hTextBox, WM_GETTEXTLENGTH, 0, 0);
+            return result;
+        }
+
+        public static string GetTextBoxText(System.Drawing.Point point)
+        {
+            IntPtr hWnd = WindowFromPoint(new POINT(point));
+            
+            uint WM_GETTEXT = 0x000D;
+            int len = GetTextBoxTextLength(hWnd);
+            if (len <= 0) return string.Empty;
+            StringBuilder sb = new StringBuilder(len + 1);
+            GetWindowTextContent(hWnd, WM_GETTEXT, len + 1, sb);
+            return sb.ToString();
+        }
 
         public static string GetWindowTextUnderCursor()
         {
@@ -71,8 +92,11 @@ namespace Automate.Recorder
             if (IntPtr.Zero == hWnd) return string.Empty;
 
             int length = GetWindowTextLength(hWnd);
-            StringBuilder sb = new StringBuilder(length);
-            GetWindowText(hWnd, sb, sb.Capacity+1);
+            if (0 >= length) return string.Empty;
+
+            StringBuilder sb = new StringBuilder(length + 1);
+            int result = GetWindowText(hWnd, sb, length +1);
+            if (0 >= result) return string.Empty;
             return sb.ToString();
         }
 
