@@ -25,7 +25,7 @@ namespace Automate.Recorder
             this.Dispose(false);
             GC.SuppressFinalize(this);
         }
-
+         
 
         private IKeyboardMouseEvents m_Hook;
 
