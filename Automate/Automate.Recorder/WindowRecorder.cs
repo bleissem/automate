@@ -38,6 +38,26 @@ namespace Automate.Recorder
             public int Y;
         }
 
+        #region GetAncestor
+
+        private const int GA_PARENT = 1;
+        private const int GA_ROOT = 2;
+        private const int GA_ROOTOWNER = 3;
+       
+        #endregion
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetAncestor(IntPtr hWnd, int flags);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetFocus();
+
         [DllImport("user32.dll")]
         public static extern IntPtr WindowFromPoint(POINT lpPoint);
 
@@ -58,7 +78,7 @@ namespace Automate.Recorder
           CharSet = CharSet.Auto)]
         static extern int GetTextContentLength(IntPtr hwndControl, UInt32 Msg, int wParam, int lParam); 
 
-        static int GetTextBoxTextLength(IntPtr hTextBox)
+        private static int GetTextBoxTextLength(IntPtr hTextBox)
         {
             uint WM_GETTEXTLENGTH = 0x000E;
             int result = GetTextContentLength(hTextBox, WM_GETTEXTLENGTH, 0, 0);
@@ -90,6 +110,9 @@ namespace Automate.Recorder
         {
             IntPtr hWnd = WindowFromPoint(new POINT(point));
             if (IntPtr.Zero == hWnd) return string.Empty;
+
+            IntPtr parent = GetAncestor(hWnd, GA_ROOT);
+            if (IntPtr.Zero != parent) hWnd = parent;
 
             int length = GetWindowTextLength(hWnd);
             if (0 >= length) return string.Empty;
