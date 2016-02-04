@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -43,8 +44,17 @@ namespace Automate.Recorder
         private const int GA_PARENT = 1;
         private const int GA_ROOT = 2;
         private const int GA_ROOTOWNER = 3;
-       
+
         #endregion
+
+        [DllImport("kernel32.dll")]
+        static extern uint GetCurrentThreadId();
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
@@ -106,6 +116,68 @@ namespace Automate.Recorder
             return GetWindowText(pointCursor);
         }
 
+        private static string GetWindowTextPrivate(IntPtr hWnd)
+        {
+            int length = GetWindowTextLength(hWnd);
+            if (0 >= length) return string.Empty;
+
+            StringBuilder sb = new StringBuilder(length + 1);
+            int result = GetWindowText(hWnd, sb, length + 1);
+            if (0 >= result) return string.Empty;
+            return sb.ToString();
+        }
+
+        private static bool TryAttachThreadInput(IntPtr window, out string text)
+       {
+            text = string.Empty;
+            bool result = false;
+
+            uint currentThreadId = GetCurrentThreadId();
+            IntPtr activeWindow = GetForegroundWindow();
+            uint activeProcessId;
+            uint activeThreadId = GetWindowThreadProcessId(activeWindow, out activeProcessId);
+
+            uint windowProcess;
+            uint windowThread = GetWindowThreadProcessId(window, out windowProcess);
+
+            bool b1 = false;
+            bool b2 = false;
+
+            if (currentThreadId != activeThreadId)
+            {
+                b1 = AttachThreadInput(currentThreadId, activeThreadId, true);
+            }
+            if (windowThread != currentThreadId)
+            {
+                b2 = AttachThreadInput(windowThread, currentThreadId, true);
+            }
+
+            if ((b1) && (b2))
+            {
+                //SetForegroundWindow(window);
+                IntPtr getFocus = GetFocus();
+                if (IntPtr.Zero != getFocus)
+                {
+                    IntPtr parent = GetAncestor(getFocus, GA_ROOT);
+                    if (IntPtr.Zero != parent) getFocus = parent;
+
+                    text = GetWindowTextPrivate(getFocus);
+                    result = true;
+                }
+            }
+
+            if (currentThreadId != activeThreadId)
+            {
+                AttachThreadInput(currentThreadId, activeThreadId, false);
+            }
+            if (windowThread != currentThreadId)
+            {
+                AttachThreadInput(windowThread, currentThreadId, false);
+            }
+
+            return result;
+        }
+
         public static string GetWindowText(System.Drawing.Point point)
         {
             IntPtr hWnd = WindowFromPoint(new POINT(point));
@@ -114,13 +186,13 @@ namespace Automate.Recorder
             IntPtr parent = GetAncestor(hWnd, GA_ROOT);
             if (IntPtr.Zero != parent) hWnd = parent;
 
-            int length = GetWindowTextLength(hWnd);
-            if (0 >= length) return string.Empty;
+            string text = string.Empty;
+            if (TryAttachThreadInput(hWnd, out text))
+            {
+                return text;
+            }
 
-            StringBuilder sb = new StringBuilder(length + 1);
-            int result = GetWindowText(hWnd, sb, length +1);
-            if (0 >= result) return string.Empty;
-            return sb.ToString();
+            return GetWindowTextPrivate(hWnd);
         }
 
     }
